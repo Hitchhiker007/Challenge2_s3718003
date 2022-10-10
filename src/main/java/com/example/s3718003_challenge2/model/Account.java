@@ -1,15 +1,31 @@
 package com.example.s3718003_challenge2.model;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="Account")
 public class Account {
 
     public Account() {
 
     }
+
+    @Id
+    @Column(name="id")
+    private Integer id;
+    @Column(name="acctype")
+    private String acctype;
+    @Column(name="accnumber")
+    private String accnumber;
+    @Column(name="accname")
+    private String accname;
+    @Column(name="balance")
+    private Integer balance;
+    @Column(name="date")
+    private String date;
 
     public Account(Integer id, String acctype, String accnumber, String accname, Integer balance,
                    String date) {
@@ -22,13 +38,6 @@ public class Account {
         this.date = date;
 
     }
-
-    private Integer id;
-    private String acctype;
-    private String accnumber;
-    private String accname;
-    private Integer balance;
-    private String date;
 
 
     public Integer getId() {

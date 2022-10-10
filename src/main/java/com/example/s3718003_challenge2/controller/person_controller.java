@@ -17,7 +17,7 @@ public class person_controller {
     PersonDAO PersonDAO;
 
 
-    @GetMapping("/getpersons")
+    @GetMapping()
     public List<Person> getAllPersons()
     {
         return PersonDAO.getAllPersons();

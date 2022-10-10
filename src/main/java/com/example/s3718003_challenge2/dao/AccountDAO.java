@@ -5,79 +5,65 @@ import java.util.List;
 
 import com.example.s3718003_challenge2.model.Account;
 import com.example.s3718003_challenge2.exception.AddResponse;
+import com.example.s3718003_challenge2.model.Person;
+import com.example.s3718003_challenge2.repositories.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountDAO {
 
-    static HashMap<Integer,Account> accountIDMap;
+    @Autowired
+    AccountRepository accountrep;
 
-    public AccountDAO()
+    public List<Account> getAllAccounts()
     {
-        accountIDMap = new HashMap<Integer,Account>();
-
-        Account jeffAccount = new Account(1, "Term Investment", "23456789", "Jeff",350, "10-10-2022");
-        Account michaelAccount = new Account(2, "Loan", "9384849", "Michael", 19, "10-10-2022");
-        Account lokeshAccount = new Account(3, "Saving", "9480450", "Lokesh", 450, "10-10-2022");
-
-        accountIDMap.put(1,jeffAccount);
-        accountIDMap.put(2,michaelAccount);
-        accountIDMap.put(3,lokeshAccount);
-    }
-
-    public List getAllAccounts()
-    {
-        List accounts = new ArrayList(accountIDMap.values());
-        return accounts;
+        return accountrep.findAll();
     }
 
     public Account getAccountbyID(int id)
     {
-        Account Account = accountIDMap.get(id);
-        return Account;
+        return accountrep.findById(id).get();
     }
 
     public Account getAccountbyName(String accountName)
     {
-        Account Account = null;
-        for (int i:accountIDMap.keySet())
+        List<Account> accounts=accountrep.findAll();
+        Account account = null;
+        for(Account acc:accounts)
         {
-            if(accountIDMap.get(i).getAccName().equals(accountName))
-                Account = accountIDMap.get(i);
+            if(acc.getAccName().equalsIgnoreCase(accountName))
+                account=acc;
         }
-        return Account;
+        return account;
     }
 
-    public Account addAccount(Account Account)
+    public Account addAccount(Account account)
     {
-        Account.setId(getMaxId());
-        accountIDMap.put(Account.getId(), Account);
-        return Account;
+        account.setId(getMaxId());
+        accountrep.save(account);
+        return account;
     }
 
-    public static int getMaxId()
+    public int getMaxId()
     {
-        int max=0;
-        for (int id: accountIDMap.keySet())
-            if(max<=id)
-                max=id;
-        return max+1;
+        return accountrep.findAll().size()+1;
     }
 
-    public Account updateAccount(Account Account)
+    public Account updateAccount(Account account)
     {
-        if(Account.getId()>0)
-            accountIDMap.put(Account.getId(), Account);
-        return Account;
+        accountrep.save(account);
+        return account;
     }
 
     public AddResponse deleteAccount(int id)
     {
-        accountIDMap.remove(id);
-        AddResponse res = new AddResponse();
-        res.setMsg("Account has been deleted");
+        accountrep.deleteById(id);
+        AddResponse res= new AddResponse();
+        res.setMsg("Account Deleted !");
         res.setId(id);
         return res;
     }
+
 
 }
