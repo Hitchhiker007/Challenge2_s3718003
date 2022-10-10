@@ -5,77 +5,63 @@ import java.util.List;
 
 import com.example.s3718003_challenge2.model.Person;
 import com.example.s3718003_challenge2.exception.AddResponse;
+import com.example.s3718003_challenge2.repositories.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component
+@Service
 public class PersonDAO {
 
-    static HashMap<Integer,Person> personIDMap;
+    @Autowired
+    PersonRepository personrep;
 
-    public PersonDAO()
+    public List<Person> getAllPersons()
     {
-        personIDMap = new HashMap<Integer,Person>();
-
-        Person jeffPerson = new Person(1, "Jeff", "Sunny Court", 4029, 35, "FireMan", "skux@gmail.com", "0468659988");
-        Person michaelPerson = new Person(2, "Michael", "Dark Court", 5029, 19, "Policeman", "police@gmail.com", "04688976435");
-        Person lokeshPerson = new Person(3, "Lokesh", "Mid Court", 3028, 28, "Doctor", "doctor@gmail.com", "0468684897");
-
-        personIDMap.put(1,jeffPerson);
-        personIDMap.put(2,michaelPerson);
-        personIDMap.put(3,lokeshPerson);
-    }
-
-    public List getAllPersons()
-    {
-        List persons = new ArrayList(personIDMap.values());
-        return persons;
+        return personrep.findAll();
     }
 
     public Person getPersonbyID(int id)
     {
-        Person Person = personIDMap.get(id);
-        return Person;
+        return personrep.findById(id).get();
     }
 
     public Person getPersonbyName(String personName)
     {
-        Person Person = null;
-        for (int i:personIDMap.keySet())
+        List<Person> persons=personrep.findAll();
+        Person person = null;
+        for(Person per:persons)
         {
-            if(personIDMap.get(i).getName().equals(personName))
-                Person = personIDMap.get(i);
+            if(per.getName().equalsIgnoreCase(personName))
+                person=per;
         }
-        return Person;
+        return person;
     }
 
-    public Person addPerson(Person Person)
+    public Person addPerson(Person person)
     {
-        Person.setId(getMaxId());
-        personIDMap.put(Person.getId(), Person);
-        return Person;
+        person.setId(getMaxId());
+        personrep.save(person);
+        return person;
     }
 
-    public static int getMaxId()
+    public int getMaxId()
     {
-        int max=0;
-        for (int id: personIDMap.keySet())
-            if(max<=id)
-                max=id;
-        return max+1;
+        return personrep.findAll().size()+1;
     }
 
-    public Person updatePerson(Person Person)
+    public Person updatePerson(Person person)
     {
-        if(Person.getId()>0)
-            personIDMap.put(Person.getId(), Person);
-        return Person;
+        personrep.save(person);
+        return person;
     }
 
     public AddResponse deletePerson(int id)
     {
-        personIDMap.remove(id);
-        AddResponse res = new AddResponse();
-        res.setMsg("Person has been deleted");
+        personrep.deleteById(id);
+        AddResponse res= new AddResponse();
+        res.setMsg("Person Deleted !");
         res.setId(id);
         return res;
     }

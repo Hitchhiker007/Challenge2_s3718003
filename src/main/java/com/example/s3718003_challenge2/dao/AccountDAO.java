@@ -3,79 +3,79 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.example.s3718003_challenge2.model.Person;
+import com.example.s3718003_challenge2.model.Account;
 import com.example.s3718003_challenge2.exception.AddResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountDAO {
 
-    static HashMap<Integer,Person> personIDMap;
+    static HashMap<Integer,Account> accountIDMap;
 
     public AccountDAO()
     {
-        personIDMap = new HashMap<Integer,Person>();
+        accountIDMap = new HashMap<Integer,Account>();
 
-        Person jeffPerson = new Person(1, "Jeff", "Sunny Court", 4029, 35, "FireMan", "skux@gmail.com", "0468659988");
-        Person michaelPerson = new Person(2, "Michael", "Dark Court", 5029, 19, "Policeman", "police@gmail.com", "04688976435");
-        Person lokeshPerson = new Person(3, "Lokesh", "Mid Court", 3028, 28, "Doctor", "doctor@gmail.com", "0468684897");
+        Account jeffAccount = new Account(1, "Term Investment", "23456789", "Jeff",350, "10-10-2022");
+        Account michaelAccount = new Account(2, "Loan", "9384849", "Michael", 19, "10-10-2022");
+        Account lokeshAccount = new Account(3, "Saving", "9480450", "Lokesh", 450, "10-10-2022");
 
-        personIDMap.put(1,jeffPerson);
-        personIDMap.put(2,michaelPerson);
-        personIDMap.put(3,lokeshPerson);
+        accountIDMap.put(1,jeffAccount);
+        accountIDMap.put(2,michaelAccount);
+        accountIDMap.put(3,lokeshAccount);
     }
 
-    public List getAllPersons()
+    public List getAllAccounts()
     {
-        List persons = new ArrayList(personIDMap.values());
-        return persons;
+        List accounts = new ArrayList(accountIDMap.values());
+        return accounts;
     }
 
-    public Person getPersonbyID(int id)
+    public Account getAccountbyID(int id)
     {
-        Person Person = personIDMap.get(id);
-        return Person;
+        Account Account = accountIDMap.get(id);
+        return Account;
     }
 
-    public Person getPersonbyName(String personName)
+    public Account getAccountbyName(String accountName)
     {
-        Person Person = null;
-        for (int i:personIDMap.keySet())
+        Account Account = null;
+        for (int i:accountIDMap.keySet())
         {
-            if(personIDMap.get(i).getName().equals(personName))
-                Person = personIDMap.get(i);
+            if(accountIDMap.get(i).getAccName().equals(accountName))
+                Account = accountIDMap.get(i);
         }
-        return Person;
+        return Account;
     }
 
-    public Person addPerson(Person Person)
+    public Account addAccount(Account Account)
     {
-        Person.setId(getMaxId());
-        personIDMap.put(Person.getId(), Person);
-        return Person;
+        Account.setId(getMaxId());
+        accountIDMap.put(Account.getId(), Account);
+        return Account;
     }
 
     public static int getMaxId()
     {
         int max=0;
-        for (int id: personIDMap.keySet())
+        for (int id: accountIDMap.keySet())
             if(max<=id)
                 max=id;
         return max+1;
     }
 
-    public Person updatePerson(Person Person)
+    public Account updateAccount(Account Account)
     {
-        if(Person.getId()>0)
-            personIDMap.put(Person.getId(), Person);
-        return Person;
+        if(Account.getId()>0)
+            accountIDMap.put(Account.getId(), Account);
+        return Account;
     }
 
-    public AddResponse deletePerson(int id)
+    public AddResponse deleteAccount(int id)
     {
-        personIDMap.remove(id);
+        accountIDMap.remove(id);
         AddResponse res = new AddResponse();
-        res.setMsg("Person has been deleted");
+        res.setMsg("Account has been deleted");
         res.setId(id);
         return res;
     }

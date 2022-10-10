@@ -12,7 +12,7 @@ public class Account {
     }
 
     public Account(Integer id, String acctype, String accnumber, String accname, Integer balance,
-                   Date date) {
+                   String date) {
         super();
         this.id = id;
         this.acctype = acctype;
@@ -20,6 +20,7 @@ public class Account {
         this.accname = accname;
         this.balance = balance;
         this.date = date;
+
     }
 
     private Integer id;
@@ -27,7 +28,7 @@ public class Account {
     private String accnumber;
     private String accname;
     private Integer balance;
-    private Date date;
+    private String date;
 
 
     public Integer getId() {
@@ -70,11 +71,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

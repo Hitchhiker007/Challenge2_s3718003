@@ -1,10 +1,31 @@
 package com.example.s3718003_challenge2.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Person")
 public class Person {
 
-    public Person() {
-
-    }
+    @Id
+    @Column(name="id")
+    private Integer id;
+    @Column(name="name")
+    private String name;
+    @Column(name="address")
+    private String address;
+    @Column(name="postcode")
+    private Integer postcode;
+    @Column(name="age")
+    private Integer age;
+    @Column(name="job")
+    private String job;
+    @Column(name="email")
+    private String email;
+    @Column(name="phoneno")
+    private String phoneno;
 
     public Person(Integer id, String name, String address, Integer postcode, Integer age,
                   String job, String email, String phoneno) {
@@ -19,15 +40,12 @@ public class Person {
         this.phoneno = phoneno;
     }
 
-    private Integer id;
-    private String name;
-    private String address;
-    private Integer postcode;
-    private Integer age;
-    private String job;
-    private String email;
-    private String phoneno;
+    public Person() {
 
+    }
+
+
+    @Id
     public Integer getId() {
         return id;
     }
@@ -44,7 +62,7 @@ public class Person {
         this.name = name;
     }
 
-    public String getAdress() {
+    public String getAddress() {
         return address;
     }
 
@@ -52,6 +70,13 @@ public class Person {
         this.address = address;
     }
 
+    public Integer getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(Integer postcode) {
+        this.postcode = postcode;
+    }
     public Integer getAge() {
         return age;
     }
@@ -89,4 +114,5 @@ public class Person {
         return "Person [id=" + id + ", name=" + name + ", address=" + address + ", postcode=" + postcode +
                 ", age=" + age + ", job=" + job + ", email=" + email + ", phoneno=" + phoneno + "]";
     }
+
 }
