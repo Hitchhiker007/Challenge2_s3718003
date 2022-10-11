@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Table(name="Account")
 public class Account {
 
+    //
     public Account() {
 
     }
