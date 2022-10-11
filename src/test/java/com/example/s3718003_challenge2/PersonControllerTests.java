@@ -42,7 +42,7 @@ public class PersonControllerTests {
         mypersons.add(new Person(2, "Jacob", "Mcnaven Court", 3027, 31, "Fisherman", "Fish@gmail.com", "04687589"));
 
         when(PersonDAO.getAllPersons()).thenReturn(mypersons); //Mock
-        //This will not talk to the databse but will go straight to the getAllPersons() method in the controller
+        //This will not talk to the database but will go straight to the getAllPersons() method in the controller
         ResponseEntity<List<Person>> res = person_controller.getAllPersons();
 
         //Validation
