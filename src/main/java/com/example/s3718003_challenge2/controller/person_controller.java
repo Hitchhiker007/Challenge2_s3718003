@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/person")
@@ -17,10 +18,18 @@ public class person_controller {
     PersonDAO PersonDAO;
 
 
-    @GetMapping()
-    public List<Person> getAllPersons()
+    @GetMapping("/getperson")
+    public ResponseEntity<List<Person>> getAllPersons()
     {
-        return PersonDAO.getAllPersons();
+        try{
+            List<Person> persons = PersonDAO.getAllPersons();
+            return new ResponseEntity<List<Person>>(persons, HttpStatus.FOUND);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("person/{id}")
@@ -53,11 +62,18 @@ public class person_controller {
     }
 
     @PostMapping("/addperson")
-    public Person addPerson(@RequestBody Person person)
+    public ResponseEntity<Person> addPerson(@RequestBody Person person)
     {
-        return PersonDAO.addPerson(person);
+      try{
+          person = PersonDAO.addPerson(person);
+          return new ResponseEntity<Person>(person,HttpStatus.CREATED);
+      }
+      catch(NoSuchElementException e)
+      {
+          return new ResponseEntity<>(HttpStatus.CONFLICT);
+      }
     }
-
+    //
     @PutMapping("/updateperson/{id}")
     public ResponseEntity<Person> updatePerson(@PathVariable(value="id") int id, @RequestBody Person person)
     {

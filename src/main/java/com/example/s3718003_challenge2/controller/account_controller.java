@@ -2,12 +2,14 @@ package com.example.s3718003_challenge2.controller;
 import com.example.s3718003_challenge2.dao.AccountDAO;
 import com.example.s3718003_challenge2.exception.AddResponse;
 import com.example.s3718003_challenge2.model.Account;
+import com.example.s3718003_challenge2.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/account")
@@ -17,10 +19,18 @@ public class account_controller {
     AccountDAO AccountDAO;
 
 
-    @GetMapping()
-    public List<Account> getAllAccounts()
+    @GetMapping("/getaccount")
+    public ResponseEntity<List<Account>> getAllAccounts()
     {
-        return AccountDAO.getAllAccounts();
+        try{
+            List<Account> accounts = AccountDAO.getAllAccounts();
+            return new ResponseEntity<List<Account>>(accounts, HttpStatus.FOUND);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/account/{id}")
@@ -53,9 +63,16 @@ public class account_controller {
     }
 
     @PostMapping("/addaccount")
-    public Account addAccount(@RequestBody Account account)
+    public ResponseEntity<Account> addAccount(@RequestBody Account account)
     {
-        return AccountDAO.addAccount(account);
+        try{
+            account = AccountDAO.addAccount(account);
+            return new ResponseEntity<Account>(account,HttpStatus.CREATED);
+        }
+        catch(NoSuchElementException e)
+        {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @PutMapping("/updateaccount")
