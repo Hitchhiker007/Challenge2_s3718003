@@ -58,7 +58,7 @@ public class person_controller {
         return PersonDAO.addPerson(person);
     }
 
-    @PutMapping("/updateperson")
+    @PutMapping("/updateperson/{id}")
     public ResponseEntity<Person> updatePerson(@PathVariable(value="id") int id, @RequestBody Person person)
     {
         try {
