@@ -3,6 +3,8 @@ import com.example.s3718003_challenge2.dao.AccountDAO;
 import com.example.s3718003_challenge2.exception.AddResponse;
 import com.example.s3718003_challenge2.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,33 +18,64 @@ public class account_controller {
 
 
     @GetMapping()
-    public List getAllPersons()
+    public List<Account> getAllAccounts()
     {
         return AccountDAO.getAllAccounts();
     }
 
-    @GetMapping("account/{id}")
-    public Account getAccountID(@PathVariable(value="id") int id)
+    @GetMapping("/account/{id}")
+    public ResponseEntity<Account> getAccountbyID(@PathVariable(value="id") int id)
     {
-        return AccountDAO.getAccountbyID(id);
+        try
+        {
+            Account account  = AccountDAO.getAccountbyID(id);
+            return new ResponseEntity<Account>(account, HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @GetMapping("accountaccountName")
-    public Account getAccountbyname(@PathVariable(value="name") String accountName)
+    @GetMapping("/accountName")
+    public ResponseEntity<Account> getAccountbyname(@PathVariable(value="name") String accountName)
     {
-        return AccountDAO.getAccountbyName(accountName);
+        try
+        {
+            Account account  = AccountDAO.getAccountbyName(accountName);
+            return new ResponseEntity<Account>(account,HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping()
-    public Account addPerson(@RequestBody Account Account)
+    @PostMapping("/addaccount")
+    public Account addAccount(@RequestBody Account account)
     {
-        return AccountDAO.addAccount(Account);
+        return AccountDAO.addAccount(account);
     }
 
-    @PutMapping()
-    public Account updateAccount(@RequestBody Account Account)
+    @PutMapping("/updateaccount")
+    public ResponseEntity<Account> updateAccount(@PathVariable(value="id") int id, @RequestBody Account account)
     {
-        return AccountDAO.updateAccount(Account);
+        try {
+            Account existAccount = AccountDAO.getAccountbyID(id);
+            existAccount.setAccType(account.getAccType());
+            existAccount.setAccNumber(account.getAccNumber());
+            existAccount.setAccName(account.getAccName());
+            existAccount.setBalance(account.getBalance());
+            existAccount.setDate(account.getDate());
+
+            Account updated_account = AccountDAO.updateAccount(existAccount);
+            return new ResponseEntity<Account>(updated_account,HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @DeleteMapping("/deleteaccount/{id}")
