@@ -2,10 +2,14 @@ package com.example.s3718003_challenge2.controller;
 import com.example.s3718003_challenge2.dao.AccountDAO;
 import com.example.s3718003_challenge2.exception.AddResponse;
 import com.example.s3718003_challenge2.model.Account;
+import com.example.s3718003_challenge2.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/account")
@@ -15,34 +19,80 @@ public class account_controller {
     AccountDAO AccountDAO;
 
 
-    @GetMapping()
-    public List getAllPersons()
+    @GetMapping("/getaccount")
+    public ResponseEntity<List<Account>> getAllAccounts()
     {
-        return AccountDAO.getAllAccounts();
+        try{
+            List<Account> accounts = AccountDAO.getAllAccounts();
+            return new ResponseEntity<List<Account>>(accounts, HttpStatus.FOUND);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @GetMapping("account/{id}")
-    public Account getAccountID(@PathVariable(value="id") int id)
+    @GetMapping("/account/{id}")
+    public ResponseEntity<Account> getAccountbyID(@PathVariable(value="id") int id)
     {
-        return AccountDAO.getAccountbyID(id);
+        try
+        {
+            Account account  = AccountDAO.getAccountbyID(id);
+            return new ResponseEntity<Account>(account, HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @GetMapping("accountaccountName")
-    public Account getAccountbyname(@PathVariable(value="name") String accountName)
+    @GetMapping("/accountName")
+    public ResponseEntity<Account> getAccountbyname(@PathVariable(value="name") String accountName)
     {
-        return AccountDAO.getAccountbyName(accountName);
+        try
+        {
+            Account account  = AccountDAO.getAccountbyName(accountName);
+            return new ResponseEntity<Account>(account,HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping()
-    public Account addPerson(@RequestBody Account Account)
+    @PostMapping("/addaccount")
+    public ResponseEntity<Account> addAccount(@RequestBody Account account)
     {
-        return AccountDAO.addAccount(Account);
+        try{
+            account = AccountDAO.addAccount(account);
+            return new ResponseEntity<Account>(account,HttpStatus.CREATED);
+        }
+        catch(NoSuchElementException e)
+        {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
-    @PutMapping()
-    public Account updateAccount(@RequestBody Account Account)
+    @PutMapping("/updateaccount")
+    public ResponseEntity<Account> updateAccount(@PathVariable(value="id") int id, @RequestBody Account account)
     {
-        return AccountDAO.updateAccount(Account);
+        try {
+            Account existAccount = AccountDAO.getAccountbyID(id);
+            existAccount.setAccType(account.getAccType());
+            existAccount.setAccNumber(account.getAccNumber());
+            existAccount.setAccName(account.getAccName());
+            existAccount.setBalance(account.getBalance());
+            existAccount.setDate(account.getDate());
+
+            Account updated_account = AccountDAO.updateAccount(existAccount);
+            return new ResponseEntity<Account>(updated_account,HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @DeleteMapping("/deleteaccount/{id}")
